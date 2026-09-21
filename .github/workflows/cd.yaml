@@ -4,19 +4,44 @@ on:
   workflow_run:
     workflows: [CI]
     types: [completed]
-    branches: [main]
+    branches: [develop, main]
 
 permissions:
   contents: read
 
 concurrency:
-  group: production
+  group: vercel-${{ github.event.workflow_run.head_branch }}
   cancel-in-progress: false
 
 jobs:
-  deploy:
-    name: Deploy to Vercel
-    if: github.event.workflow_run.conclusion == 'success'
+  deploy-preview:
+    name: Deploy preview to Vercel
+    if: >-
+      github.event.workflow_run.event == 'push' &&
+      github.event.workflow_run.head_branch == 'develop' &&
+      github.event.workflow_run.conclusion == 'success'
+    runs-on: ubuntu-latest
+    environment: preview
+    env:
+      VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+      VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+      VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+
+    steps:
+      - name: Checkout tested revision
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.workflow_run.head_sha }}
+
+      - name: Deploy preview to Vercel
+        run: npx --yes vercel@latest deploy --yes --token="$VERCEL_TOKEN"
+
+  deploy-production:
+    name: Deploy production to Vercel
+    if: >-
+      github.event.workflow_run.event == 'push' &&
+      github.event.workflow_run.head_branch == 'main' &&
+      github.event.workflow_run.conclusion == 'success'
     runs-on: ubuntu-latest
     environment: production
     env:
@@ -30,5 +55,5 @@ jobs:
         with:
           ref: ${{ github.event.workflow_run.head_sha }}
 
-      - name: Deploy to Vercel
+      - name: Deploy production to Vercel
         run: npx --yes vercel@latest deploy --prod --yes --token="$VERCEL_TOKEN"
