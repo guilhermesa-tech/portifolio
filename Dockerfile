@@ -10,7 +10,7 @@ WORKDIR /app
 # Copia dependências primeiro para aproveitar cache do Docker
 COPY package*.json ./
 
-RUN npm install
+RUN npm ci
 
 # Copia o código-fonte
 COPY . .

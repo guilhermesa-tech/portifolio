@@ -44,9 +44,9 @@ export interface Case {
 export const cases: Case[] = [
   {
     number: '001',
-    title: 'Pipeline de Deploy Automatizado',
-    description: 'Pipeline CI/CD completo com build, testes automatizados, deploy em ambiente de staging e estratégia de rollback automático em produção.',
-    tags: ['GitHub Actions', 'Docker', 'Cloud', 'CI/CD'],
+    title: 'Pipeline de CI/CD e Validação Containerizada',
+    description: 'Pipeline de integração contínua para validação de código (lint, testes, auditoria de segurança) e validação de container Docker via smoke test automatizado.',
+    tags: ['GitHub Actions', 'Docker', 'Vercel', 'CI/CD'],
     repo: null,
   },
   {
