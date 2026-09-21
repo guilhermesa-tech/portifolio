@@ -47,7 +47,7 @@ export const cases: Case[] = [
     title: 'Pipeline de CI/CD e Validação Containerizada',
     description: 'Pipeline de integração contínua para validação de código (lint, testes, auditoria de segurança) e validação de container Docker via smoke test automatizado.',
     tags: ['GitHub Actions', 'Docker', 'Vercel', 'CI/CD'],
-    repo: null,
+    repo: 'https://github.com/guilhermesa-tech/portifolio',
   },
   {
     number: '002',
