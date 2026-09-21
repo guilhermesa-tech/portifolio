@@ -1,0 +1,152 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ── MODO CLARO (Default) ── */
+:root {
+  --bg-main: #F7F7F8;
+  --bg-card: #EFEFF3;
+  --bg-card-hover: #FFFFFF;
+  --text-main: #050505;
+  --text-secondary: #4B5563;
+  --border-main: #D9D9DF;
+  --tag-bg: #FFFFFF;
+  --accent: #443CFF;
+  --accent-hover: #332BDB;
+  color-scheme: light;
+}
+
+/* ── MODO ESCURO ── */
+:root.dark,
+html.dark,
+.dark,
+[data-theme="dark"] {
+  --bg-main: #050505;
+  --bg-card: #121216;
+  --bg-card-hover: #181820;
+  --text-main: #FFFFFF;
+  --text-secondary: #E4E4E7;
+  --border-main: #27272F;
+  --tag-bg: #121216;
+  --accent: #443CFF;
+  --accent-hover: #5A52FF;
+  color-scheme: dark;
+}
+
+/* ── Regras de Contraste Rígidas para Garantia Visual ── */
+html:not(.dark) body {
+  background-color: #F7F7F8 !important;
+  color: #050505 !important;
+}
+
+html:not(.dark) .text-ink {
+  color: #050505 !important;
+}
+
+html:not(.dark) .text-secondary {
+  color: #4B5563 !important;
+}
+
+html:not(.dark) .border-border {
+  border-color: #D9D9DF !important;
+}
+
+html:not(.dark) .bg-card {
+  background-color: #EFEFF3 !important;
+}
+
+/* No Modo Escuro: Fundo #050505 e TODAS as letras em branco #FFFFFF */
+html.dark body {
+  background-color: #050505 !important;
+  color: #FFFFFF !important;
+}
+
+html.dark .text-ink {
+  color: #FFFFFF !important;
+}
+
+html.dark .text-secondary {
+  color: #E4E4E7 !important;
+}
+
+html.dark .border-border {
+  border-color: #27272F !important;
+}
+
+html.dark .bg-card {
+  background-color: #121216 !important;
+}
+
+body {
+  font-family: 'Inter', system-ui, sans-serif;
+  line-height: 1.6;
+  overflow-x: hidden;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+::selection {
+  background-color: #443CFF;
+  color: #ffffff;
+}
+
+:focus-visible {
+  outline: 2px solid #443CFF;
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+/* ── Scrollbar ── */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--bg-main); }
+::-webkit-scrollbar-thumb { background: var(--border-main); border-radius: 2px; }
+::-webkit-scrollbar-thumb:hover { background: #443CFF; }
+
+/* ── Scroll reveal ── */
+.reveal {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ── Ticker ── */
+.ticker-track {
+  display: flex;
+  width: max-content;
+  animation: ticker 35s linear infinite;
+}
+@keyframes ticker {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+/* ── Neo-brutalist border hover com Azul Elétrico ── */
+.brutal-hover {
+  transition: box-shadow 0.2s ease, transform 0.2s ease, background-color 0.2s ease;
+}
+.brutal-hover:hover {
+  box-shadow: 4px 4px 0px var(--accent);
+  transform: translate(-2px, -2px);
+}
+
+/* ── Utilities ── */
+.sr-only {
+  position: absolute; width: 1px; height: 1px; padding: 0;
+  margin: -1px; overflow: hidden; clip: rect(0,0,0,0);
+  white-space: nowrap; border-width: 0;
+}

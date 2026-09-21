@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Guilherme Santos de Araújo — Engenheiro DevOps Júnior. Cloud, IaC, CI/CD, Observabilidade e Automação de Infraestrutura." />
+    <meta name="keywords" content="DevOps, SRE, Cloud, AWS, Terraform, Ansible, Docker, Kubernetes, GitHub Actions, Prometheus, Grafana, IaC" />
+    <meta name="author" content="Guilherme Santos de Araújo" />
+    <!-- Open Graph -->
+    <meta property="og:title" content="Guilherme Santos de Araújo — DevOps, Cloud & Automation" />
+    <meta property="og:description" content="Construindo infraestrutura confiável, pipelines automatizados e sistemas observáveis." />
+    <meta property="og:type" content="website" />
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <script>
+      (function() {
+        try {
+          var theme = localStorage.getItem('theme') || 'light';
+          if (theme === 'dark') {
+            document.documentElement.classList.add('dark');
+            document.documentElement.setAttribute('data-theme', 'dark');
+          } else {
+            document.documentElement.classList.remove('dark');
+            document.documentElement.setAttribute('data-theme', 'light');
+          }
+        } catch (e) {
+          document.documentElement.classList.remove('dark');
+        }
+      })();
+    </script>
+    <title>Guilherme Santos de Araújo — DevOps Engineer</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
