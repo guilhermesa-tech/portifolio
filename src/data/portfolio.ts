@@ -59,9 +59,9 @@ export const cases: Case[] = [
   {
     number: '003',
     title: 'Infraestrutura como Código na AWS',
-    description: 'Provisionamento reproduzível de VPC, EC2, S3 e Security Groups com Terraform + Ansible para configuração idempotente dos servidores.',
-    tags: ['Terraform', 'Ansible', 'AWS', 'IaC'],
-    repo: null,
+    description: 'Utilização de VPC com provisionamento reproduzível e configuração de EC2, S3 e Security Groups com Terraform.',
+    tags: ['Terraform', 'AWS', 'IaC'],
+    repo: 'https://github.com/guilhermesa-tech/terraform-aws-infrastructure',
   },
 ];
 
