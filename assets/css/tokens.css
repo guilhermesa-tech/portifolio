@@ -1,0 +1,150 @@
+/* ==========================================================================
+   Design tokens — fonte única de verdade para cor, tipo, espaço e movimento.
+   Tema escuro é o padrão; o claro troca só as variáveis de cor.
+   ========================================================================== */
+
+:root {
+  /* Tipografia — Archivo é variável (largura 62–125, peso 100–900), o que
+     permite animar "wdth" e "wght" nos títulos. */
+  --font-display: "Archivo", "Helvetica Neue", Arial, system-ui, sans-serif;
+  --font-body: "Archivo", "Helvetica Neue", Arial, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Consolas, monospace;
+
+  /* Escala fluida (min → max entre ~360px e ~1440px de viewport) */
+  --fs-xs: 0.75rem;
+  --fs-sm: 0.875rem;
+  --fs-base: 1rem;
+  --fs-md: clamp(1.0625rem, 0.98rem + 0.3vw, 1.25rem);
+  --fs-lg: clamp(1.25rem, 1.1rem + 0.6vw, 1.625rem);
+  --fs-xl: clamp(1.75rem, 1.3rem + 1.8vw, 2.75rem);
+  --fs-2xl: clamp(2.5rem, 1.4rem + 4.4vw, 5.25rem);
+  --fs-3xl: clamp(2.9rem, 0.9rem + 8vw, 8.5rem);
+
+  /* Espaçamento — grade de 4pt */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.5rem;
+  --space-6: 2rem;
+  --space-7: 3rem;
+  --space-8: 4rem;
+  --space-9: 6rem;
+
+  --section-y: clamp(5.5rem, 3.5rem + 8vw, 10.5rem);
+  --gutter: clamp(1.25rem, 0.6rem + 2.8vw, 3rem);
+  --container: 1320px;
+  --header-h: 72px;
+
+  /* Forma */
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --radius-lg: 22px;
+  --radius-xl: 32px;
+  --radius-pill: 999px;
+
+  /* Movimento */
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --ease-snap: cubic-bezier(0.2, 0.9, 0.1, 1);
+  --dur-1: 160ms;
+  --dur-2: 320ms;
+  --dur-3: 640ms;
+  --dur-4: 1100ms;
+
+  /* Camadas */
+  --z-content: 1;
+  --z-header: 50;
+  --z-menu: 45; /* abaixo do header, para o botão de fechar ficar visível */
+  --z-grain: 90;
+  --z-cursor: 100;
+  --z-toast: 150;
+  --z-preloader: 200;
+
+  /* Cores fixas (independentes de tema) */
+  --lime: #c6ff3d;
+  --violet: #7b6bff;
+  --orange: #ff8a3d;
+  --ink-900: #07080c;
+
+  /* Terminal/janelas "de produção" são sempre escuros, em qualquer tema */
+  --term-bg: #0b0d13;
+  --term-bar: #11141c;
+  --term-line: rgba(255, 255, 255, 0.07);
+  --term-text: #d9ddea;
+  --term-dim: #6b7288;
+  --term-ok: #c6ff3d;
+  --term-accent: #a197ff;
+  --term-warn: #ffb547;
+  --term-err: #ff6a5c;
+}
+
+/* --------------------------------------------------------------------------
+   Tema escuro (padrão)
+   -------------------------------------------------------------------------- */
+[data-theme="dark"] {
+  color-scheme: dark;
+
+  --bg: #07080c;
+  --bg-elev: #0b0d13;
+  --surface: #0f121a;
+  --surface-2: #161a25;
+  --glass: rgba(14, 17, 25, 0.62);
+
+  --line: rgba(255, 255, 255, 0.075);
+  --line-strong: rgba(255, 255, 255, 0.16);
+
+  --text: #eef0f7;
+  --text-muted: #9097ab;
+  --text-dim: #5f667b;
+  --ink-rgb: 238, 240, 247;
+
+  --accent: #7b6bff;
+  --accent-ink: #a197ff;
+  --accent-rgb: 123, 107, 255;
+
+  --signal: #c6ff3d;
+  --signal-ink: #c6ff3d;
+  --signal-rgb: 198, 255, 61;
+  --on-signal: #0a0b0f;
+
+  --alert: #ff6a3d;
+
+  --shadow-sm: 0 1px 0 rgba(255, 255, 255, 0.04) inset, 0 8px 24px -12px rgba(0, 0, 0, 0.6);
+  --shadow-lg: 0 40px 100px -30px rgba(0, 0, 0, 0.75);
+}
+
+/* --------------------------------------------------------------------------
+   Tema claro
+   -------------------------------------------------------------------------- */
+[data-theme="light"] {
+  color-scheme: light;
+
+  --bg: #f3f2ee;
+  --bg-elev: #ebeae5;
+  --surface: #ffffff;
+  --surface-2: #f6f5f1;
+  --glass: rgba(255, 255, 255, 0.7);
+
+  --line: rgba(10, 12, 20, 0.09);
+  --line-strong: rgba(10, 12, 20, 0.2);
+
+  --text: #0b0d14;
+  --text-muted: #525869;
+  --text-dim: #8a8f9e;
+  --ink-rgb: 11, 13, 20;
+
+  --accent: #4a3aff;
+  --accent-ink: #4a3aff;
+  --accent-rgb: 74, 58, 255;
+
+  --signal: #c6ff3d;
+  --signal-ink: #3d6b00;
+  --signal-rgb: 106, 170, 0;
+  --on-signal: #0a0b0f;
+
+  --alert: #e5482a;
+
+  --shadow-sm: 0 1px 0 rgba(255, 255, 255, 0.8) inset, 0 8px 24px -14px rgba(10, 12, 20, 0.25);
+  --shadow-lg: 0 40px 90px -35px rgba(10, 12, 20, 0.35);
+}

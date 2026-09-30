@@ -1,0 +1,381 @@
+/* ==========================================================================
+   Contato — título gigante, e-mail com cópia, formulário (mailto)
+   e globo interativo "Juara → regiões AWS".
+   ========================================================================== */
+
+.contact {
+  overflow: hidden;
+  padding-bottom: clamp(4rem, 3rem + 4vw, 7rem);
+}
+
+.contact__title {
+  margin: 28px 0 clamp(3rem, 2rem + 4vw, 5.5rem);
+  font-family: var(--font-display);
+  font-size: var(--fs-3xl);
+  font-weight: 800;
+  font-variation-settings: "wdth" 100;
+  line-height: 0.9;
+  letter-spacing: -0.045em;
+  text-transform: uppercase;
+}
+
+.contact__title .hl {
+  color: var(--signal-ink);
+}
+
+.contact__grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: clamp(2rem, 5vw, 5rem);
+  align-items: start;
+}
+
+.contact__info {
+  display: grid;
+  gap: 30px;
+}
+
+.contact__lead {
+  max-width: 40ch;
+  font-size: var(--fs-lg);
+  line-height: 1.45;
+  color: var(--text-muted);
+}
+
+.contact__lead strong {
+  font-weight: 600;
+  color: var(--text);
+}
+
+/* Cartão de e-mail */
+.email-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 10px 10px 24px;
+  border-radius: var(--radius-pill);
+  background: var(--surface);
+  border: 1px solid var(--line-strong);
+}
+
+.email-card__link {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: clamp(1rem, 0.8rem + 0.9vw, 1.45rem);
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  background: linear-gradient(var(--signal-ink), var(--signal-ink)) 0 100% / 0 2px no-repeat;
+  transition: background-size var(--dur-3) var(--ease-out), color var(--dur-2);
+}
+
+.email-card__link:hover {
+  color: var(--signal-ink);
+  background-size: 100% 2px;
+}
+
+.email-card__copy {
+  position: relative;
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: var(--lime);
+  color: var(--ink-900);
+  font-size: 19px;
+  transition: transform var(--dur-3) var(--ease-out);
+}
+
+.email-card__copy:hover {
+  transform: scale(1.08) rotate(-8deg);
+}
+
+.email-card__copy .icon {
+  grid-area: 1 / 1;
+  transition: transform 0.5s var(--ease-out), opacity 0.3s;
+}
+
+.email-card__copy .icon--check {
+  opacity: 0;
+  transform: scale(0.3);
+}
+
+.email-card__copy.is-copied .icon--copy {
+  opacity: 0;
+  transform: scale(0.3);
+}
+
+.email-card__copy.is-copied .icon--check {
+  opacity: 1;
+  transform: none;
+}
+
+/* --------------------------------------------------------------------------
+   Formulário
+   -------------------------------------------------------------------------- */
+.contact-form {
+  display: grid;
+  gap: 14px;
+  padding: clamp(1.25rem, 2.5vw, 2rem);
+  border-radius: var(--radius-xl);
+  background: var(--surface);
+  border: 1px solid var(--line);
+}
+
+.contact-form__title {
+  font-size: 1.125rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+.field {
+  position: relative;
+  display: grid;
+}
+
+.field__input {
+  width: 100%;
+  padding: 26px 16px 10px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--line-strong);
+  background: var(--bg);
+  color: var(--text);
+  font-size: 1rem;
+  outline: 0;
+  resize: vertical;
+  transition: border-color var(--dur-2), box-shadow var(--dur-2);
+}
+
+textarea.field__input {
+  min-height: 132px;
+}
+
+.field__label {
+  position: absolute;
+  top: 18px;
+  left: 17px;
+  font-size: 0.95rem;
+  color: var(--text-muted);
+  pointer-events: none;
+  transform-origin: left top;
+  transition: transform var(--dur-2) var(--ease-out), color var(--dur-2);
+}
+
+.field__input:focus + .field__label,
+.field__input:not(:placeholder-shown) + .field__label {
+  transform: translateY(-11px) scale(0.76);
+  color: var(--accent-ink);
+}
+
+.field__input:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 4px rgba(var(--accent-rgb), 0.15);
+}
+
+.field__input[aria-invalid="true"] {
+  border-color: var(--alert);
+}
+
+.field__error {
+  min-height: 0;
+  margin-top: 6px;
+  font-size: 0.8rem;
+  color: var(--alert);
+}
+
+.field__error:empty {
+  display: none;
+}
+
+.contact-form__footer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px 20px;
+  margin-top: 4px;
+}
+
+.contact-form__note {
+  font-size: 0.8rem;
+  color: var(--text-dim);
+}
+
+.contact-form .btn.is-sent .btn__icon {
+  animation: fly 0.9s var(--ease-in-out);
+}
+
+@keyframes fly {
+  45% {
+    transform: translate(40px, -40px) rotate(-45deg);
+    opacity: 0;
+  }
+  55% {
+    transform: translate(-40px, 40px) rotate(-45deg);
+    opacity: 0;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Globo
+   -------------------------------------------------------------------------- */
+.contact__side {
+  display: grid;
+  gap: 26px;
+}
+
+.globe {
+  position: relative;
+  aspect-ratio: 1;
+  width: 100%;
+  max-width: 560px;
+  justify-self: center;
+  touch-action: pan-y;
+}
+
+.globe::before {
+  content: "";
+  position: absolute;
+  inset: 8%;
+  border-radius: 50%;
+  background: radial-gradient(circle at 50% 50%, rgba(var(--accent-rgb), 0.08), transparent 60%);
+  filter: blur(24px);
+}
+
+.globe__canvas {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  cursor: grab;
+}
+
+.globe__canvas:active {
+  cursor: grabbing;
+}
+
+.globe__caption {
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  translate: -50% 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 14px;
+  border-radius: var(--radius-pill);
+  background: var(--glass);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid var(--line);
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+
+.globe__caption .icon {
+  color: var(--signal-ink);
+}
+
+/* Lista de canais */
+.contact__links {
+  border-top: 1px solid var(--line);
+}
+
+.contact__row {
+  position: relative;
+  display: grid;
+  grid-template-columns: 120px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 16px;
+  padding: 18px 6px;
+  border-bottom: 1px solid var(--line);
+  isolation: isolate;
+}
+
+a.contact__row::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: var(--surface);
+  transform: scaleY(0);
+  transform-origin: bottom;
+  transition: transform 0.5s var(--ease-out);
+}
+
+a.contact__row:hover::before,
+a.contact__row:focus-visible::before {
+  transform: scaleY(1);
+}
+
+.contact__label {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.72rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.contact__label .icon {
+  font-size: 16px;
+  color: var(--text);
+}
+
+.contact__value {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-weight: 600;
+  transition: transform 0.5s var(--ease-out);
+}
+
+a.contact__row:hover .contact__value {
+  transform: translateX(8px);
+}
+
+.contact__arrow {
+  font-size: 20px;
+  color: var(--text-muted);
+  transition: transform 0.5s var(--ease-out), color var(--dur-2);
+}
+
+a.contact__row:hover .contact__arrow {
+  transform: rotate(45deg);
+  color: var(--signal-ink);
+}
+
+@media (max-width: 960px) {
+  .contact__grid {
+    grid-template-columns: 1fr;
+  }
+
+  .contact__side {
+    order: -1;
+  }
+
+  .globe {
+    max-width: 420px;
+  }
+}
+
+@media (max-width: 520px) {
+  .contact__row {
+    grid-template-columns: minmax(0, 1fr) auto;
+    row-gap: 6px;
+  }
+
+  .contact__label {
+    grid-column: 1 / -1;
+  }
+
+  .email-card {
+    padding-left: 18px;
+  }
+}

@@ -1,0 +1,72 @@
+/* ==========================================================================
+   Marquee — duas faixas cruzadas; velocidade e direção seguem o scroll (JS)
+   ========================================================================== */
+
+.marquee {
+  position: relative;
+  padding-block: clamp(3rem, 6vw, 5.5rem) clamp(2.5rem, 4vw, 3.5rem);
+  overflow: hidden;
+}
+
+.marquee__band {
+  position: relative;
+  display: flex;
+  margin-inline: -6vw;
+  padding-block: clamp(14px, 1.6vw, 22px);
+  overflow: hidden;
+}
+
+.marquee__band--signal {
+  z-index: 2;
+  background: var(--lime);
+  color: var(--ink-900);
+  transform: rotate(-3deg);
+  box-shadow: 0 20px 60px -20px rgba(198, 255, 61, 0.35);
+}
+
+.marquee__band--outline {
+  z-index: 1;
+  margin-top: clamp(-40px, -2.6vw, -24px);
+  background: var(--surface);
+  border-block: 1px solid var(--line);
+  transform: rotate(2.6deg);
+}
+
+.marquee__track {
+  display: flex;
+  width: max-content;
+  will-change: transform;
+}
+
+.marquee__group {
+  display: flex;
+  align-items: center;
+}
+
+.marquee__item {
+  display: inline-flex;
+  align-items: center;
+  gap: clamp(18px, 2vw, 32px);
+  padding-right: clamp(18px, 2vw, 32px);
+  font-family: var(--font-display);
+  font-size: clamp(1.4rem, 0.9rem + 2.4vw, 3rem);
+  font-weight: 800;
+  font-variation-settings: "wdth" 115;
+  line-height: 1;
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.marquee__item .icon {
+  font-size: 0.6em;
+}
+
+.marquee__band--outline .marquee__item {
+  color: transparent;
+  -webkit-text-stroke: 1px var(--text-muted);
+}
+
+.marquee__band--outline .marquee__item .icon {
+  color: var(--accent-ink);
+}

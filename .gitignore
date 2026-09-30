@@ -1,0 +1,18 @@
+# Artefatos locais de ferramentas e testes
+.playwright-mcp/
+.impeccable/
+.vercel/
+node_modules/
+
+# Documentação interna e segredos nunca vão para o repositório
+docs/
+.env
+.env.*
+
+# Sistema operacional / editores
+.DS_Store
+Thumbs.db
+desktop.ini
+*.log
+.vscode/
+.idea/

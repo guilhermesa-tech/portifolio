@@ -1,0 +1,551 @@
+/* ==========================================================================
+   Projetos — cards empilháveis (sticky) com demos vivas:
+   run de CI, dashboard NOC e terraform apply.
+   ========================================================================== */
+
+.projects__stack {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 24px;
+}
+
+.project {
+  --card-accent: var(--accent);
+  --card-rgb: var(--accent-rgb);
+}
+
+.project--signal {
+  --card-accent: var(--lime);
+  --card-rgb: 198, 255, 61;
+}
+
+.project--orange {
+  --card-accent: var(--orange);
+  --card-rgb: 255, 138, 61;
+}
+
+.project__inner {
+  --spot-rgb: var(--card-rgb);
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.08fr);
+  gap: clamp(1.5rem, 4vw, 4rem);
+  padding: clamp(1.25rem, 3vw, 2.75rem);
+  border-radius: var(--radius-xl);
+  background: var(--surface);
+  border: 1px solid var(--line);
+  box-shadow: var(--shadow-lg);
+  overflow: hidden;
+  transform-origin: 50% 0;
+  will-change: transform;
+}
+
+/* Faixa de cor no topo do card */
+.project__inner::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 8%;
+  right: 8%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--card-accent), transparent);
+  opacity: 0.8;
+}
+
+/* Véu que escurece o card quando o próximo empilha por cima (JS → --dim) */
+.project__veil {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  border-radius: inherit;
+  background: var(--bg);
+  opacity: var(--dim, 0);
+  pointer-events: none;
+}
+
+.project__content {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 22px;
+}
+
+.project__top {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px 16px;
+  width: 100%;
+}
+
+.project__index {
+  font-family: var(--font-display);
+  font-size: clamp(3.5rem, 2rem + 5vw, 6.5rem);
+  font-weight: 900;
+  font-variation-settings: "wdth" 125;
+  line-height: 0.8;
+  letter-spacing: -0.04em;
+  color: transparent;
+  -webkit-text-stroke: 1.2px var(--card-accent);
+}
+
+[data-theme="light"] .project--signal .project__index {
+  -webkit-text-stroke-color: var(--signal-ink);
+}
+
+.project__status {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px;
+  border-radius: var(--radius-pill);
+  border: 1px solid var(--line-strong);
+  font-size: 0.7rem;
+  letter-spacing: 0.04em;
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+
+.project__status--soon {
+  border-color: rgba(255, 181, 71, 0.5);
+  color: #e89a1e;
+}
+
+[data-theme="dark"] .project__status--soon {
+  color: var(--term-warn);
+}
+
+.project__status--soon .pulse-dot {
+  background: var(--term-warn);
+  box-shadow: 0 0 10px rgba(255, 181, 71, 0.8);
+}
+
+.project__title {
+  font-family: var(--font-display);
+  font-size: clamp(1.7rem, 1.1rem + 2vw, 2.9rem);
+  font-weight: 800;
+  font-variation-settings: "wdth" 96;
+  line-height: 1;
+  letter-spacing: -0.03em;
+  text-wrap: balance;
+  margin-top: auto;
+}
+
+.project__desc {
+  max-width: 48ch;
+  color: var(--text-muted);
+  font-size: var(--fs-md);
+  line-height: 1.6;
+}
+
+.project__visual {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  min-height: 380px;
+}
+
+.project__visual .window {
+  flex: 1;
+  min-width: 0;
+}
+
+/* --------------------------------------------------------------------------
+   Demo 001 — run de CI
+   -------------------------------------------------------------------------- */
+.ci__commit {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 18px;
+  border-bottom: 1px solid var(--term-line);
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--term-dim);
+}
+
+.ci__commit .icon {
+  font-size: 15px;
+  color: var(--term-accent);
+}
+
+.ci__commit b {
+  font-weight: 500;
+  color: var(--term-text);
+}
+
+.ci__jobs {
+  display: grid;
+  gap: 2px;
+  padding: 10px;
+}
+
+.ci__job {
+  display: grid;
+  grid-template-columns: 22px 1fr auto;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 10px;
+  border-radius: 10px;
+  font-size: 0.875rem;
+  color: var(--term-dim);
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.ci__job[data-state="running"] {
+  background: rgba(161, 151, 255, 0.08);
+  color: var(--term-text);
+}
+
+.ci__job[data-state="success"] {
+  color: var(--term-text);
+}
+
+.ci__state {
+  position: relative;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  border: 1.5px dashed #3a4050;
+}
+
+.ci__job[data-state="running"] .ci__state {
+  border: 2px solid rgba(161, 151, 255, 0.25);
+  border-top-color: var(--term-accent);
+  animation: spin 0.8s linear infinite;
+}
+
+.ci__job[data-state="success"] .ci__state {
+  border: 0;
+  background: var(--term-ok);
+}
+
+.ci__job[data-state="success"] .ci__state::after {
+  content: "";
+  position: absolute;
+  left: 6px;
+  top: 3px;
+  width: 5px;
+  height: 9px;
+  border: solid var(--ink-900);
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+
+.ci__time {
+  font-size: 0.72rem;
+  font-variant-numeric: tabular-nums;
+  color: var(--term-dim);
+}
+
+.ci__footer {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: auto;
+  padding: 14px 18px;
+  border-top: 1px solid var(--term-line);
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--term-dim);
+}
+
+.ci__footer.is-success {
+  color: var(--term-ok);
+}
+
+.ci__progress {
+  height: 2px;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.ci__progress span {
+  display: block;
+  height: 100%;
+  background: linear-gradient(90deg, var(--term-accent), var(--term-ok));
+  transform-origin: left;
+  transform: scaleX(0);
+  transition: transform 0.4s linear;
+}
+
+/* --------------------------------------------------------------------------
+   Demo 002 — dashboard NOC
+   -------------------------------------------------------------------------- */
+.noc__kpis {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  border-bottom: 1px solid var(--term-line);
+}
+
+.noc__kpi {
+  display: grid;
+  gap: 2px;
+  padding: 14px 18px;
+  font-family: var(--font-mono);
+}
+
+.noc__kpi + .noc__kpi {
+  border-left: 1px solid var(--term-line);
+}
+
+.noc__kpi span {
+  font-size: 0.65rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--term-dim);
+}
+
+.noc__kpi b {
+  font-family: var(--font-display);
+  font-size: 1.75rem;
+  font-weight: 800;
+  font-variation-settings: "wdth" 115;
+  line-height: 1.1;
+  color: var(--term-text);
+  font-variant-numeric: tabular-nums;
+}
+
+.noc__kpi small {
+  font-size: 0.7rem;
+  color: var(--term-dim);
+}
+
+.noc__kpi--ok b {
+  color: var(--term-ok);
+}
+
+.noc__kpi.is-alert b {
+  color: var(--term-warn);
+}
+
+.noc__chart {
+  position: relative;
+  height: 150px;
+  padding: 10px 6px 0;
+}
+
+.noc__chart canvas {
+  width: 100%;
+  height: 100%;
+}
+
+.noc__chart-label {
+  position: absolute;
+  top: 12px;
+  left: 18px;
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--term-dim);
+}
+
+.noc__hosts {
+  display: grid;
+  grid-template-columns: repeat(15, minmax(0, 1fr));
+  gap: 5px;
+  padding: 14px 18px;
+}
+
+.noc__host {
+  height: 16px;
+  border-radius: 4px;
+  background: rgba(198, 255, 61, 0.75);
+  transition: background-color 0.4s, box-shadow 0.4s;
+}
+
+.noc__host.is-alert {
+  background: var(--term-warn);
+  box-shadow: 0 0 12px var(--term-warn);
+  animation: blink 0.5s steps(1) infinite;
+}
+
+.noc__log {
+  margin-top: auto;
+  padding: 12px 18px;
+  border-top: 1px solid var(--term-line);
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--term-ok);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.noc__log.is-alert {
+  color: var(--term-warn);
+}
+
+/* --------------------------------------------------------------------------
+   Demo 003 — terraform: diagrama + terminal sincronizados
+   -------------------------------------------------------------------------- */
+.tf__diagram {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 14px;
+  padding: 18px;
+  border-bottom: 1px solid var(--term-line);
+}
+
+.tf__vpc {
+  position: relative;
+  display: grid;
+  gap: 10px;
+  padding: 26px 12px 12px;
+  border-radius: 14px;
+  border: 1.5px dashed #313747;
+  transition: border-color 0.5s, background-color 0.5s;
+}
+
+.tf__vpc-label {
+  position: absolute;
+  top: 7px;
+  left: 12px;
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.08em;
+  color: var(--term-dim);
+}
+
+.tf__subnet {
+  position: relative;
+  display: flex;
+  gap: 10px;
+  padding: 24px 10px 10px;
+  border-radius: 10px;
+  border: 1px dashed #2b303e;
+  transition: border-color 0.5s;
+}
+
+.tf__res {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 11px;
+  border-radius: 9px;
+  background: #121620;
+  border: 1px solid var(--term-line);
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: var(--term-dim);
+  opacity: 0.45;
+  transition: opacity 0.5s, border-color 0.5s, color 0.5s, box-shadow 0.6s, transform 0.6s var(--ease-snap);
+}
+
+.tf__res .icon {
+  font-size: 16px;
+}
+
+.tf__res.is-created,
+.tf__vpc.is-created .tf__vpc-label,
+.tf__subnet.is-created > .tf__vpc-label {
+  opacity: 1;
+  color: var(--term-text);
+}
+
+.tf__res.is-created {
+  border-color: rgba(255, 138, 61, 0.55);
+  box-shadow: 0 0 22px -6px rgba(255, 138, 61, 0.6);
+}
+
+.tf__res.is-created .icon {
+  color: var(--orange);
+}
+
+.tf__vpc.is-created,
+.tf__subnet.is-created {
+  border-color: rgba(255, 138, 61, 0.55);
+}
+
+.tf__vpc.is-created {
+  background: rgba(255, 138, 61, 0.04);
+}
+
+.tf__side {
+  display: grid;
+  align-content: center;
+}
+
+.tf__term {
+  flex: 1;
+  margin: 0;
+  padding: 16px 18px;
+  min-height: 210px;
+  max-height: 240px;
+  overflow: hidden;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  line-height: 1.7;
+  white-space: pre-wrap;
+  color: var(--term-text);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+}
+
+.tf__term .t-cmd {
+  color: #fff;
+}
+
+.tf__term .t-prompt {
+  color: var(--term-ok);
+}
+
+.tf__term .t-add {
+  color: var(--term-ok);
+}
+
+.tf__term .t-dim {
+  color: var(--term-dim);
+}
+
+.tf__term .t-strong {
+  color: var(--term-ok);
+  font-weight: 700;
+}
+
+/* --------------------------------------------------------------------------
+   Empilhamento sticky no desktop
+   -------------------------------------------------------------------------- */
+@media (min-width: 961px) and (min-height: 700px) {
+  .projects__stack {
+    gap: 14vh;
+    padding-bottom: 4vh;
+  }
+
+  .project {
+    position: sticky;
+    top: calc(var(--header-h) + 34px + var(--i) * 22px);
+  }
+}
+
+@media (max-width: 960px) {
+  .project__inner {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .project__title {
+    margin-top: 0;
+  }
+
+  .project__visual {
+    min-height: 0;
+  }
+}
+
+@media (max-width: 480px) {
+  .noc__hosts {
+    grid-template-columns: repeat(10, minmax(0, 1fr));
+  }
+
+  .tf__diagram {
+    grid-template-columns: 1fr;
+  }
+
+  .tf__subnet {
+    flex-wrap: wrap;
+  }
+}

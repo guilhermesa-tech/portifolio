@@ -1,0 +1,751 @@
+/* ==========================================================================
+   Hero — malha de rede viva ao fundo, nome em fonte variável reativa ao
+   cursor e retrato com moldura cônica animada + chips orbitando.
+   ========================================================================== */
+
+.hero {
+  position: relative;
+  isolation: isolate;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 100vh;
+  min-height: 100svh;
+  padding-block: calc(var(--header-h) + 56px) 110px;
+  overflow: hidden;
+}
+
+/* --------------------------------------------------------------------------
+   Fundo: canvas da malha, brilho que segue o mouse, auroras e grid
+   -------------------------------------------------------------------------- */
+.hero__bg {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+}
+
+.hero__mesh {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.hero__grid {
+  position: absolute;
+  inset: 0;
+  background-image: linear-gradient(var(--line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--line) 1px, transparent 1px);
+  background-size: 72px 72px;
+  background-position: center top;
+  mask-image: radial-gradient(ellipse 70% 60% at 60% 40%, #000 20%, transparent 75%);
+  -webkit-mask-image: radial-gradient(ellipse 70% 60% at 60% 40%, #000 20%, transparent 75%);
+  opacity: 0.55;
+}
+
+.hero__aurora {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(70px);
+  will-change: transform;
+}
+
+.hero__aurora--a {
+  top: -18%;
+  right: -8%;
+  width: 55vmax;
+  height: 55vmax;
+  background: radial-gradient(circle, rgba(var(--accent-rgb), 0.28), transparent 62%);
+  animation: aurora-a 18s var(--ease-in-out) infinite alternate;
+}
+
+.hero__aurora--b {
+  bottom: -30%;
+  left: -15%;
+  width: 45vmax;
+  height: 45vmax;
+  background: radial-gradient(circle, rgba(var(--signal-rgb), 0.12), transparent 60%);
+  animation: aurora-b 22s var(--ease-in-out) infinite alternate;
+}
+
+@keyframes aurora-a {
+  to {
+    transform: translate3d(-8vw, 10vh, 0) scale(1.15);
+  }
+}
+
+@keyframes aurora-b {
+  to {
+    transform: translate3d(10vw, -8vh, 0) scale(0.9);
+  }
+}
+
+/* Brilho que acompanha o ponteiro (posição via transform, sem repaint) */
+.hero__spot {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 46vmax;
+  height: 46vmax;
+  margin: -23vmax 0 0 -23vmax;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(var(--accent-rgb), 0.16), transparent 60%);
+  opacity: 0;
+  transition: opacity 1s var(--ease-out);
+  will-change: transform;
+}
+
+.hero.is-pointer .hero__spot {
+  opacity: 1;
+}
+
+/* --------------------------------------------------------------------------
+   Layout
+   -------------------------------------------------------------------------- */
+.hero__inner {
+  display: grid;
+  grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr);
+  align-items: center;
+  gap: clamp(2rem, 5vw, 5rem);
+}
+
+.hero__content {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 26px;
+}
+
+/* --------------------------------------------------------------------------
+   Nome
+   -------------------------------------------------------------------------- */
+.hero__title {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1em;
+  font-family: var(--font-display);
+  text-transform: uppercase;
+  letter-spacing: -0.035em;
+  line-height: 0.84;
+}
+
+.hero__name {
+  display: block;
+  font-size: clamp(3.1rem, 0.8rem + 7.3vw, 7.6rem);
+  font-weight: 800;
+  white-space: nowrap;
+  /* Máscara para os caracteres subirem; o padding protege os acentos */
+  overflow: hidden;
+  padding: 0.12em 0.06em 0.04em;
+  margin: -0.12em -0.06em -0.04em;
+}
+
+.hero__name .char {
+  display: inline-block;
+  font-variation-settings: "wdth" var(--wdth, 96), "wght" var(--wght, 800);
+  transition: font-variation-settings 0.5s var(--ease-out), color 0.4s;
+  will-change: transform;
+}
+
+.hero__name .char.is-near {
+  color: var(--signal-ink);
+}
+
+.hero__surname {
+  display: block;
+  overflow: hidden;
+  padding: 0.16em 0.04em 0.06em;
+  margin: -0.16em -0.04em -0.06em;
+  font-size: clamp(1.45rem, 0.5rem + 3.05vw, 3.25rem);
+  font-weight: 700;
+  font-variation-settings: "wdth" 112;
+  letter-spacing: -0.02em;
+}
+
+/* Sobrenome vazado; no hover do título, um preenchimento sólido varre da
+   esquerda para a direita (cópia do texto em ::after, recortada por clip-path) */
+.hero__surname-inner {
+  position: relative;
+  display: inline-block;
+  color: transparent;
+  -webkit-text-stroke: 1.2px var(--text);
+}
+
+.hero__surname-inner::after {
+  content: attr(data-text);
+  position: absolute;
+  inset: 0;
+  color: var(--signal-ink);
+  -webkit-text-stroke: 0;
+  /* Recorte estendido acima/abaixo: sem isso o acento do "Ú" fica de fora */
+  clip-path: inset(-0.4em 100% -0.3em 0);
+  transition: clip-path 0.9s var(--ease-in-out);
+}
+
+.hero__title:hover .hero__surname-inner::after {
+  clip-path: inset(-0.4em 0 -0.3em 0);
+}
+
+@media (hover: none) {
+  .hero__surname-inner {
+    color: var(--text-muted);
+    -webkit-text-stroke: 0;
+  }
+}
+
+/* Linha "terminal" com máquina de escrever */
+.hero__role {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 1.6em;
+  font-size: clamp(0.85rem, 0.75rem + 0.35vw, 1.05rem);
+  color: var(--text);
+}
+
+.hero__prompt {
+  color: var(--signal-ink);
+}
+
+.caret {
+  display: inline-block;
+  width: 0.55em;
+  height: 1.15em;
+  margin-left: -6px;
+  background: var(--signal-ink);
+  animation: caret-blink 1s steps(1) infinite;
+}
+
+@keyframes caret-blink {
+  50% {
+    opacity: 0;
+  }
+}
+
+.hero__lead {
+  max-width: 44ch;
+  font-size: var(--fs-md);
+  line-height: 1.6;
+  color: var(--text-muted);
+}
+
+.hero__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 4px;
+}
+
+.hero__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 26px;
+  font-size: 0.78rem;
+  color: var(--text-muted);
+}
+
+.hero__meta li {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.hero__meta .icon {
+  font-size: 15px;
+  color: var(--signal-ink);
+}
+
+.hero__meta a {
+  background: linear-gradient(currentColor, currentColor) 0 100% / 0 1px no-repeat;
+  transition: background-size var(--dur-3) var(--ease-out), color var(--dur-2);
+}
+
+.hero__meta a:hover {
+  color: var(--text);
+  background-size: 100% 1px;
+}
+
+/* --------------------------------------------------------------------------
+   Retrato
+   -------------------------------------------------------------------------- */
+.hero__visual {
+  position: relative;
+  display: grid;
+  place-items: center;
+  perspective: 1400px;
+}
+
+.portrait {
+  position: relative;
+  width: min(100%, 430px);
+  aspect-ratio: 4 / 5;
+}
+
+.portrait__glow {
+  position: absolute;
+  inset: -8%;
+  z-index: -1;
+  border-radius: 42%;
+  background: conic-gradient(from 0deg, var(--accent), var(--lime), var(--accent), #3ad0ff, var(--accent));
+  filter: blur(64px);
+  opacity: 0.32;
+  animation: spin 14s linear infinite;
+}
+
+[data-theme="light"] .portrait__glow {
+  opacity: 0.22;
+}
+
+@property --border-angle {
+  syntax: "<angle>";
+  initial-value: 0deg;
+  inherits: false;
+}
+
+.portrait__card {
+  --rx: 0deg;
+  --ry: 0deg;
+  position: relative;
+  height: 100%;
+  padding: 1.5px;
+  border-radius: var(--radius-xl);
+  background: conic-gradient(
+      from var(--border-angle),
+      transparent 0 50%,
+      var(--lime) 68%,
+      var(--accent) 84%,
+      transparent 100%
+    ),
+    linear-gradient(var(--line-strong), var(--line-strong));
+  transform: rotateX(var(--rx)) rotateY(var(--ry));
+  transform-style: preserve-3d;
+  animation: border-spin 5s linear infinite;
+  will-change: transform;
+}
+
+@keyframes border-spin {
+  to {
+    --border-angle: 360deg;
+  }
+}
+
+.portrait__media {
+  position: relative;
+  height: 100%;
+  border-radius: calc(var(--radius-xl) - 1.5px);
+  overflow: hidden;
+  background: var(--surface);
+}
+
+.portrait__media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 50% 30%;
+}
+
+/* Revelação de entrada: cortina + zoom + de P&B para cor */
+.js .portrait__media picture {
+  display: block;
+  height: 100%;
+  clip-path: inset(100% 0 0 0);
+  transition: clip-path 1.4s var(--ease-in-out) 0.25s;
+}
+
+.js .portrait__media img {
+  transform: scale(1.3);
+  filter: grayscale(1) contrast(1.15);
+  transition: transform 2s var(--ease-out) 0.25s, filter 1.6s var(--ease-out) 1.1s;
+}
+
+.hero.is-loaded .portrait__media picture {
+  clip-path: inset(0 0 0 0);
+}
+
+.hero.is-loaded .portrait__media img {
+  transform: scale(1.02);
+  filter: none;
+}
+
+/* Fallback (se a foto não carregar): monograma */
+.portrait__fallback {
+  position: absolute;
+  inset: 0;
+  display: none;
+  place-items: center;
+  font-family: var(--font-display);
+  font-size: 7rem;
+  font-weight: 900;
+  font-variation-settings: "wdth" 125;
+  color: transparent;
+  -webkit-text-stroke: 1.5px var(--line-strong);
+}
+
+.portrait.is-fallback .portrait__fallback {
+  display: grid;
+}
+
+.portrait.is-fallback picture {
+  display: none;
+}
+
+/* Linha de scan passando pela foto */
+.portrait__scan {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 28%;
+  background: linear-gradient(to bottom, transparent, rgba(198, 255, 61, 0.14));
+  border-bottom: 1px solid rgba(198, 255, 61, 0.55);
+  transform: translateY(-110%);
+  mix-blend-mode: screen;
+  pointer-events: none;
+}
+
+.hero.is-loaded .portrait__scan {
+  animation: scan 7s var(--ease-in-out) 1.8s infinite;
+}
+
+@keyframes scan {
+  0% {
+    transform: translateY(-110%);
+  }
+  38%,
+  100% {
+    transform: translateY(380%);
+  }
+}
+
+/* Reflexo holográfico que segue o ponteiro */
+.portrait__glare {
+  --gx: 50%;
+  --gy: 30%;
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at var(--gx) var(--gy), rgba(255, 255, 255, 0.28), transparent 45%);
+  mix-blend-mode: soft-light;
+  opacity: 0;
+  transition: opacity 0.5s var(--ease-out);
+  pointer-events: none;
+}
+
+.portrait.is-tilting .portrait__glare {
+  opacity: 1;
+}
+
+/* Cantoneiras de "visor" */
+.portrait__corner {
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  border: 0 solid var(--lime);
+  transition: transform 0.6s var(--ease-out);
+  pointer-events: none;
+}
+
+.portrait__corner--tl {
+  top: 16px;
+  left: 16px;
+  border-top-width: 2px;
+  border-left-width: 2px;
+}
+
+.portrait__corner--tr {
+  top: 16px;
+  right: 16px;
+  border-top-width: 2px;
+  border-right-width: 2px;
+}
+
+.portrait__corner--bl {
+  bottom: 16px;
+  left: 16px;
+  border-bottom-width: 2px;
+  border-left-width: 2px;
+}
+
+.portrait__corner--br {
+  bottom: 16px;
+  right: 16px;
+  border-bottom-width: 2px;
+  border-right-width: 2px;
+}
+
+.portrait.is-tilting .portrait__corner--tl {
+  transform: translate(-6px, -6px);
+}
+
+.portrait.is-tilting .portrait__corner--tr {
+  transform: translate(6px, -6px);
+}
+
+.portrait.is-tilting .portrait__corner--bl {
+  transform: translate(-6px, 6px);
+}
+
+.portrait.is-tilting .portrait__corner--br {
+  transform: translate(6px, 6px);
+}
+
+.portrait__tag,
+.portrait__caption {
+  position: absolute;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 12px;
+  border-radius: var(--radius-pill);
+  background: rgba(7, 8, 12, 0.55);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #eef0f7;
+  font-size: 0.68rem;
+  letter-spacing: 0.04em;
+  transform: translateZ(40px);
+}
+
+.portrait__tag {
+  top: 46px;
+  right: 46px;
+}
+
+.portrait__caption {
+  left: 46px;
+  bottom: 46px;
+}
+
+/* --------------------------------------------------------------------------
+   Chips orbitando o retrato (parallax via JS no <li>, flutuação no <span>)
+   -------------------------------------------------------------------------- */
+.orbit {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.orbit__item {
+  position: absolute;
+  left: var(--x);
+  top: var(--y);
+  will-change: transform;
+}
+
+.orbit__chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 14px 9px 10px;
+  border-radius: var(--radius-pill);
+  background: var(--glass);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid var(--line-strong);
+  box-shadow: var(--shadow-sm);
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--text);
+  white-space: nowrap;
+  animation: float 6s var(--ease-in-out) infinite alternate;
+  animation-delay: var(--delay, 0s);
+}
+
+.orbit__chip .icon {
+  font-size: 18px;
+  color: var(--brand);
+}
+
+@keyframes float {
+  from {
+    transform: translate3d(0, -7px, 0) rotate(-1.5deg);
+  }
+  to {
+    transform: translate3d(0, 7px, 0) rotate(1.5deg);
+  }
+}
+
+/* Entrada dos chips */
+.js .orbit__chip {
+  opacity: 0;
+  scale: 0.6;
+  transition: opacity 0.6s var(--ease-out), scale 0.9s var(--ease-out);
+  transition-delay: calc(1.3s + var(--n) * 120ms);
+}
+
+.hero.is-loaded .orbit__chip {
+  opacity: 1;
+  scale: 1;
+}
+
+/* --------------------------------------------------------------------------
+   Rodapé do hero
+   -------------------------------------------------------------------------- */
+.hero__footer {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 30px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+
+.scroll-cue {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.scroll-cue__line {
+  position: relative;
+  width: 1px;
+  height: 38px;
+  background: var(--line-strong);
+  overflow: hidden;
+}
+
+.scroll-cue__line::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 40%;
+  background: var(--signal-ink);
+  animation: cue 2s var(--ease-in-out) infinite;
+}
+
+@keyframes cue {
+  from {
+    transform: translateY(-100%);
+  }
+  to {
+    transform: translateY(260%);
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Coreografia de entrada (dispara quando o preloader termina)
+   -------------------------------------------------------------------------- */
+.js .hero__name .char {
+  transform: translate3d(0, 110%, 0) rotate(10deg);
+  opacity: 0;
+}
+
+.hero.is-loaded .hero__name .char {
+  animation: char-in 1.2s var(--ease-out) forwards;
+  animation-delay: calc(0.1s + var(--i) * 55ms);
+}
+
+@keyframes char-in {
+  to {
+    transform: none;
+    opacity: 1;
+  }
+}
+
+.js .hero__surname-inner {
+  transform: translate3d(0, 110%, 0);
+  transition: transform 1.2s var(--ease-out) 0.55s;
+}
+
+.hero.is-loaded .hero__surname-inner {
+  transform: none;
+}
+
+.js [data-hero-in] {
+  opacity: 0;
+  transform: translate3d(0, 24px, 0);
+  transition: opacity 0.9s var(--ease-out), transform 1.1s var(--ease-out);
+  transition-delay: calc(0.5s + var(--n, 0) * 110ms);
+}
+
+.hero.is-loaded [data-hero-in] {
+  opacity: 1;
+  transform: none;
+}
+
+/* --------------------------------------------------------------------------
+   Responsivo
+   -------------------------------------------------------------------------- */
+@media (max-width: 960px) {
+  .hero {
+    padding-top: calc(var(--header-h) + 40px);
+  }
+
+  .hero__inner {
+    grid-template-columns: 1fr;
+    gap: 56px;
+  }
+
+  .hero__visual {
+    order: -1;
+    justify-self: center;
+    width: min(78vw, 360px);
+    margin-top: 12px;
+  }
+
+  .portrait__tag {
+    top: 34px;
+    right: 34px;
+  }
+
+  .portrait__caption {
+    left: 34px;
+    bottom: 34px;
+  }
+
+  .orbit__item:nth-child(n + 4) {
+    display: none;
+  }
+
+  /* Traz os chips da esquerda para dentro da tela */
+  .orbit__item:nth-child(1) {
+    left: -5%;
+  }
+
+  .orbit__item:nth-child(3) {
+    left: -7%;
+  }
+
+  .hero__footer {
+    display: none;
+  }
+}
+
+@media (max-width: 520px) {
+  .orbit__chip {
+    padding: 7px 11px 7px 8px;
+    font-size: 0.68rem;
+  }
+
+  .hero__actions .btn {
+    flex: 1 1 100%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .js .hero__name .char,
+  .js .hero__surname-inner,
+  .js [data-hero-in],
+  .js .orbit__chip {
+    opacity: 1;
+    transform: none;
+    scale: 1;
+  }
+
+  .js .portrait__media picture {
+    clip-path: none;
+  }
+
+  .js .portrait__media img {
+    transform: none;
+    filter: none;
+  }
+}

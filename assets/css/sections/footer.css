@@ -1,0 +1,124 @@
+/* ==========================================================================
+   Footer — assinatura gigante reativa ao cursor
+   ========================================================================== */
+
+.site-footer {
+  position: relative;
+  padding-top: clamp(3rem, 6vw, 5rem);
+  border-top: 1px solid var(--line);
+  overflow: hidden;
+}
+
+.footer__top {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+}
+
+.footer__status {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
+.footer__status b {
+  font-weight: 500;
+  color: var(--signal-ink);
+}
+
+.back-top {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.back-top__icon {
+  display: grid;
+  place-items: center;
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  border: 1px solid var(--line-strong);
+  font-size: 20px;
+  transition: background-color var(--dur-2), color var(--dur-2), border-color var(--dur-2);
+}
+
+.back-top:hover .back-top__icon {
+  background: var(--lime);
+  border-color: var(--lime);
+  color: var(--ink-900);
+}
+
+.back-top:hover .back-top__icon .icon {
+  animation: rise 0.7s var(--ease-out);
+}
+
+@keyframes rise {
+  45% {
+    transform: translateY(-26px);
+    opacity: 0;
+  }
+  55% {
+    transform: translateY(26px);
+    opacity: 0;
+  }
+}
+
+/* Assinatura gigante */
+.footer__wordmark {
+  display: flex;
+  justify-content: space-between;
+  margin: clamp(1.5rem, 4vw, 3rem) 0 0;
+  font-family: var(--font-display);
+  /* Dimensionado para caber com folga mesmo com letras "expandidas" no hover */
+  font-size: clamp(3rem, 0.3rem + 13.2vw, 14.5rem);
+  font-weight: 900;
+  line-height: 0.78;
+  letter-spacing: -0.04em;
+  text-transform: uppercase;
+  user-select: none;
+  white-space: nowrap;
+}
+
+.footer__wordmark .char {
+  display: inline-block;
+  color: transparent;
+  -webkit-text-stroke: 1.5px var(--line-strong);
+  font-variation-settings: "wdth" var(--wdth, 100), "wght" var(--wght, 900);
+  transition: font-variation-settings 0.6s var(--ease-out), color 0.5s, -webkit-text-stroke-color 0.5s;
+}
+
+.footer__wordmark .char.is-near {
+  color: var(--signal-ink);
+  -webkit-text-stroke-color: var(--signal-ink);
+}
+
+.footer__bottom {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px 28px;
+  padding-block: 26px 30px;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+.footer__links {
+  display: flex;
+  gap: 22px;
+}
+
+.footer__links a {
+  transition: color var(--dur-2);
+}
+
+.footer__links a:hover {
+  color: var(--signal-ink);
+}
